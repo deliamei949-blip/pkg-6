@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>秦淮泊 · 文化约束生成器（演示原型）</title>
+<style>
+  :root {
+    --ink: #0a121c;
+    --panel: #131f2e;
+    --panel-2: #182739;
+    --line: rgba(201, 168, 106, 0.35);
+    --gold: #c9a86a;
+    --text: #eae5dc;
+    --muted: #8fa0b2;
+    --warn: #d98b7c;
+    --ok: #8fb79a;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--text);
+    font-family: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", "Microsoft YaHei", serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 40px 24px 56px; }
+
+  header { margin-bottom: 22px; }
+
+  .brand { color: var(--gold); letter-spacing: 0.3em; font-size: 13px; margin-bottom: 10px; }
+
+  h1 { font-size: 26px; font-weight: 500; margin: 0 0 10px; letter-spacing: 0.04em; }
+
+  .sub { color: var(--muted); font-size: 14px; margin: 0; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 30px;
+    padding: 18px 20px;
+    background: var(--panel);
+    border: 1px solid rgba(234, 229, 220, 0.08);
+    border-radius: 14px;
+    margin-bottom: 14px;
+  }
+
+  .group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+  .group-label { color: var(--muted); font-size: 13px; min-width: 42px; }
+
+  .chip {
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(234, 229, 220, 0.22);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+
+  .chip:hover { border-color: var(--gold); }
+
+  .chip[aria-pressed="true"] {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201, 168, 106, 0.12);
+  }
+
+  .run {
+    appearance: none;
+    background: var(--gold);
+    color: #14100a;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 24px;
+    font-size: 15px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    margin-left: auto;
+  }
+
+  .run:disabled { opacity: 0.45; cursor: default; }
+
+  .pipeline { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; min-height: 26px; }
+
+  .step {
+    font-size: 12px;
+    color: var(--muted);
+    border: 1px solid rgba(234, 229, 220, 0.14);
+    border-radius: 6px;
+    padding: 3px 10px;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .step.on { color: var(--gold); border-color: var(--line); background: rgba(201, 168, 106, 0.1); }
+
+  .status { font-size: 12px; color: var(--muted); margin: 0 0 14px; min-height: 20px; }
+
+  .status.err { color: var(--warn); }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .col {
+    background: var(--panel);
+    border: 1px solid rgba(234, 229, 220, 0.08);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .col.kept { border-color: var(--line); }
+
+  .col-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+
+  .col-title { font-size: 15px; font-weight: 500; }
+
+  .tag {
+    font-size: 12px;
+    color: var(--muted);
+    border: 1px solid rgba(234, 229, 220, 0.16);
+    border-radius: 6px;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+
+  .col.kept .tag { color: var(--gold); border-color: var(--line); }
+
+  .src-text {
+    width: 100%;
+    min-height: 132px;
+    resize: vertical;
+    background: rgba(10, 18, 28, 0.6);
+    color: var(--text);
+    border: 1px solid rgba(234, 229, 220, 0.14);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 1.9;
+  }
+
+  .src-text:focus { outline: none; border-color: var(--line); }
+
+  .row-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+  .hint { font-size: 12px; color: var(--muted); }
+
+  .out { font-size: 16px; line-height: 2; min-height: 96px; margin: 0; }
+
+  mark {
+    background: rgba(217, 139, 124, 0.18);
+    color: var(--warn);
+    border-bottom: 1px solid var(--warn);
+    padding: 1px 2px;
+  }
+
+  .col.kept mark {
+    background: rgba(201, 168, 106, 0.18);
+    color: var(--gold);
+    border-bottom: 1px solid var(--gold);
+  }
+
+  .col.kept mark.needcheck {
+    background: rgba(217, 139, 124, 0.2);
+    color: var(--warn);
+    border-bottom: 1px solid var(--warn);
+  }
+
+  .slots { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--muted); }
+
+  .slot-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+  .slot-no {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid rgba(234, 229, 220, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    line-height: 1;
+    flex: none;
+  }
+
+  .slot-left { color: var(--warn); }
+  .slot-right { color: var(--gold); }
+  .slot-right.needcheck { color: var(--warn); }
+
+  .evidence { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .evidence span {
+    font-size: 12px;
+    color: var(--gold);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 3px 9px;
+  }
+
+  .metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(234, 229, 220, 0.08);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .metrics b { font-weight: 500; }
+  .metrics .bad b { color: var(--warn); }
+  .metrics .good b { color: var(--ok); }
+
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 24px 0 14px; }
+
+  .tab {
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(234, 229, 220, 0.18);
+    color: var(--muted);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .tab[aria-selected="true"] { color: var(--gold); border-color: var(--line); background: rgba(201, 168, 106, 0.1); }
+
+  .panelbox { background: var(--panel-2); border-radius: 14px; padding: 20px; }
+
+  .prompt {
+    font-family: "SFMono-Regular", Menlo, Consolas, "PingFang SC", monospace;
+    font-size: 13px;
+    line-height: 1.85;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: rgba(10, 18, 28, 0.6);
+    border: 1px solid rgba(234, 229, 220, 0.08);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 0 0 14px;
+    color: var(--text);
+  }
+
+  .panel-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+
+  .panel-label { font-size: 12px; color: var(--muted); letter-spacing: 0.06em; }
+
+  .mini {
+    appearance: none;
+    background: transparent;
+    border: 1px solid rgba(234, 229, 220, 0.22);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .mini:hover { border-color: var(--gold); color: var(--gold); }
+
+  .repl { display: flex; flex-direction: column; }
+
+  .repl-row {
+    display: grid;
+    grid-template-columns: 24px 132px 24px 1fr;
+    align-items: baseline;
+    gap: 10px;
+    padding: 13px 0;
+    border-top: 1px solid rgba(234, 229, 220, 0.07);
+    font-size: 14px;
+  }
+
+  .repl-row:first-child { border-top: none; }
+
+  .repl-no { color: var(--muted); font-size: 12px; }
+  .repl-from { color: var(--warn); }
+  .repl-arrow { color: var(--muted); text-align: center; }
+  .repl-to { color: var(--gold); }
+  .repl-to.needcheck { color: var(--warn); }
+
+  .src { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .src .ok { color: var(--ok); }
+  .src .wait { color: var(--warn); }
+
+  .tag-warn {
+    font-size: 11px;
+    color: var(--warn);
+    border: 1px solid rgba(217, 139, 124, 0.5);
+    border-radius: 5px;
+    padding: 1px 7px;
+    margin-left: 6px;
+    white-space: nowrap;
+  }
+
+  .layer {
+    display: grid;
+    grid-template-columns: 108px 1fr;
+    gap: 14px;
+    padding: 12px 0;
+    border-top: 1px solid rgba(234, 229, 220, 0.07);
+    font-size: 14px;
+  }
+
+  .layer:first-child { border-top: none; }
+  .layer-name { color: var(--gold); font-size: 13px; }
+  .layer-note { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+  details.api {
+    background: var(--panel-2);
+    border-radius: 12px;
+    padding: 4px 18px 16px;
+    margin-top: 20px;
+  }
+
+  details.api > summary {
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--muted);
+    padding: 12px 0;
+    list-style: none;
+  }
+
+  details.api > summary::-webkit-details-marker { display: none; }
+  details.api > summary::before { content: "▸ "; color: var(--gold); }
+  details.api[open] > summary::before { content: "▾ "; }
+
+  .api-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px 16px;
+    align-items: end;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 5px; }
+
+  .field label { font-size: 12px; color: var(--muted); }
+
+  .field input, .field select {
+    background: rgba(10, 18, 28, 0.6);
+    border: 1px solid rgba(234, 229, 220, 0.16);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 9px 11px;
+    font-family: inherit;
+    font-size: 13px;
+  }
+
+  .field input:focus, .field select:focus { outline: none; border-color: var(--line); }
+
+  .api-note { font-size: 12px; color: var(--muted); margin: 12px 0 0; }
+  .api-note b { color: var(--text); font-weight: 500; }
+
+  footer {
+    margin-top: 24px;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid rgba(234, 229, 220, 0.08);
+    padding-top: 14px;
+  }
+
+  @media (max-width: 900px) {
+    .cols { grid-template-columns: 1fr; }
+    .run { margin-left: 0; }
+    .layer { grid-template-columns: 1fr; gap: 4px; }
+    .repl-row { grid-template-columns: 24px 1fr; }
+    .repl-arrow { display: none; }
+    .wrap { padding: 28px 16px 40px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">秦淮泊</div>
+    <h1>文化约束生成器</h1>
+    <p class="sub">左侧输入任意一段描写，接入三层约束后生成可追溯的文案与图像提示词。</p>
+  </header>
+
+  <div class="controls">
+    <div class="group">
+      <span class="group-label">场景</span>
+      <button class="chip" id="scene-0" type="button" aria-pressed="true">秦淮河夜泊</button>
+      <button class="chip" id="scene-1" type="button" aria-pressed="false">江南茶肆</button>
+      <button class="chip" id="scene-2" type="button" aria-pressed="false">长江渡口</button>
+    </div>
+    <div class="group">
+      <span class="group-label">朝代</span>
+      <button class="chip" id="dyn-0" type="button" aria-pressed="true">唐</button>
+      <button class="chip" id="dyn-1" type="button" aria-pressed="false">宋</button>
+      <button class="chip" id="dyn-2" type="button" aria-pressed="false">明</button>
+      <button class="chip" id="dyn-3" type="button" aria-pressed="false">清</button>
+    </div>
+    <button class="run" id="run" type="button">生成对照</button>
+  </div>
+
+  <div class="pipeline" id="pipeline" aria-live="polite">
+    <span class="step">知识检索</span>
+    <span class="step">约束编译</span>
+    <span class="step">内容生成</span>
+    <span class="step">一致性校验</span>
+    <span class="step">依据标注</span>
+  </div>
+
+  <p class="status" id="status" aria-live="polite"></p>
+
+  <div class="cols">
+    <section class="col">
+      <div class="col-head">
+        <span class="col-title">原始输入</span>
+        <span class="tag">可直接编辑</span>
+      </div>
+      <textarea class="src-text" id="src-text" spellcheck="false" aria-label="原始输入文本"></textarea>
+      <div class="row-actions">
+        <button class="mini" id="reset-src" type="button">恢复示例</button>
+        <span class="hint" id="src-hint">换成你自己的段落，或直接粘贴动画脚本里的描述</span>
+      </div>
+      <div class="slots" id="detected"></div>
+      <div class="metrics">
+        <span class="bad">检出待约束词 <b id="bad-m1">0 处</b></span>
+        <span>语域偏移 <b id="bad-m2">0 处</b></span>
+        <span>依据可追溯 <b>否</b></span>
+      </div>
+    </section>
+
+    <section class="col kept">
+      <div class="col-head">
+        <span class="col-title">三层约束后</span>
+        <span class="tag">史实层 · 语域层 · 叙事层</span>
+      </div>
+      <p class="out" id="good-out"></p>
+      <div class="slots" id="slots-right"></div>
+      <div class="evidence" id="evidence"></div>
+      <div class="metrics">
+        <span class="good">已替换 <b id="good-m1">0 处</b></span>
+        <span class="good">待考究 <b id="good-m2">0 处</b></span>
+        <span>依据可追溯 <b id="trace">—</b></span>
+      </div>
+    </section>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="输出">
+    <button class="tab" id="tab-repl" type="button" role="tab" aria-selected="true" aria-controls="panel-repl">替换建议（按槽位）</button>
+    <button class="tab" id="tab-prompt" type="button" role="tab" aria-selected="false" aria-controls="panel-prompt">生成提示词</button>
+    <button class="tab" id="tab-rule" type="button" role="tab" aria-selected="false" aria-controls="panel-rule">本次生效的约束</button>
+  </div>
+
+  <div class="panelbox" id="panel-repl" role="tabpanel" aria-labelledby="tab-repl">
+    <div class="repl" id="repl-list"></div>
+  </div>
+
+  <div class="panelbox" id="panel-prompt" role="tabpanel" aria-labelledby="tab-prompt" hidden>
+    <div class="panel-row">
+      <span class="panel-label">中文提示词</span>
+      <button class="mini" id="copy-cn" type="button">复制</button>
+    </div>
+    <p class="prompt" id="prompt-cn"></p>
+    <div class="panel-row">
+      <span class="panel-label">英文提示词</span>
+      <button class="mini" id="copy-en" type="button">复制</button>
+    </div>
+    <p class="prompt" id="prompt-en"></p>
+  </div>
+
+  <div class="panelbox" id="panel-rule" role="tabpanel" aria-labelledby="tab-rule" hidden>
+    <div class="layer">
+      <div>史实层</div>
+      <div><span id="rule-fact"></span><div class="layer-note">事实性信息逐条对应文献出处，参与一致性校验。</div></div>
+    </div>
+    <div class="layer">
+      <div>语域层</div>
+      <div><span id="rule-reg"></span><div class="layer-note">依据古籍语料的倾向性约束，不宣称唯一正确；依据未齐的条目标红为待考究。</div></div>
+    </div>
+    <div class="layer">
+      <div>叙事层</div>
+      <div><span id="rule-narr"></span><div class="layer-note">主观部分作为生成参数，不参与一致性校验。</div></div>
+    </div>
+  </div>
+
+  <details class="api" id="api-box">
+    <summary>接口设置（可选）：不填则使用内置示例，填了就对任意输入实时生成</summary>
+    <div class="api-grid">
+      <div class="field">
+        <label for="api-provider">服务商</label>
+        <select id="api-provider">
+          <option value="deepseek">DeepSeek</option>
+          <option value="qwen">通义千问</option>
+          <option value="zhipu">智谱 GLM</option>
+          <option value="moonshot">Moonshot</option>
+          <option value="custom">自定义（OpenAI 兼容）</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="api-model">模型</label>
+        <input id="api-model" type="text" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="api-base">接口地址</label>
+        <input id="api-base" type="text" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="api-key">API Key</label>
+        <input id="api-key" type="password" autocomplete="off" placeholder="sk-...">
+      </div>
+      <div class="field">
+        <label>&nbsp;</label>
+        <button class="mini" id="save-api" type="button">保存到本机</button>
+      </div>
+    </div>
+    <p class="api-note">
+      <b>Key 只保存在这台电脑的浏览器里</b>，不会写进这个文件，也不会随部署上传。如果要把页面公开部署给评委扫码使用，请不要在公开版本里填 Key，改用后端代理转发。
+    </p>
+  </details>
+
+  <footer>
+    演示原型。不接接口时显示内置示例；接入接口后，左侧任意输入都会实时走一遍约束生成。标红的条目表示依据尚未入库，处于待考究状态，不进入正式流程。
+  </footer>
+</div>
+
+<script>
+const DYNASTIES = ["唐", "宋", "明", "清"];
+const SCENES = ["秦淮河夜泊", "江南茶肆", "长江渡口"];
+
+const PROVIDERS = {
+  deepseek: { base: "https://api.deepseek.com/v1", model: "deepseek-chat" },
+  qwen: { base: "https://dashscope.aliyuncs.com/compatible-mode/v1", model: "qwen-plus" },
+  zhipu: { base: "https://open.bigmodel.cn/api/paas/v4", model: "glm-4-flash" },
+  moonshot: { base: "https://api.moonshot.cn/v1", model: "moonshot-v1-8k" },
+  custom: { base: "", model: "" }
+};
+
+const STYLE = {
+  "唐": {
+    cn: "唐代", en: "Tang dynasty China",
+    costume: "圆领袍、幞头、齐胸襦裙、披帛",
+    arch: "木构楼阁、酒旗、画舫、纸灯笼",
+    light: "烛火与灯笼暖光，低照度",
+    hint: "称谓可作“主人”“当垆”；叙述用书面体；禁用现代口语与商业用语。"
+  },
+  "宋": {
+    cn: "宋代", en: "Song dynasty China",
+    costume: "圆领襕衫、幞头、褙子、抹胸",
+    arch: "临水楼阁、茶坊酒肆、灯船、布幌",
+    light: "夜灯与河面反光，中等对比",
+    hint: "称谓可作“主人”“当垆”；侍者可考“茶酒博士”；叙述用书面体。"
+  },
+  "明": {
+    cn: "明代", en: "Ming dynasty China",
+    costume: "直身袍、网巾、袄裙、比甲",
+    arch: "河房、灯船、市肆、木格窗",
+    light: "灯烛与门窗透光，明暗分明",
+    hint: "店主作“店主人”，侍者作“店小二”（《水浒传》）；叙述用白话书面体。"
+  },
+  "清": {
+    cn: "清代", en: "Qing dynasty China",
+    costume: "长衫、马褂、旗装、云肩",
+    arch: "河房画舫、茶肆条案、木雕窗棂",
+    light: "灯笼与水面反光，冷暖对比",
+    hint: "店主作“掌柜”，侍者作“伙计”；叙述用白话书面体。"
+  }
+};
+
+const SCENE = {
+  "秦淮河夜泊": {
+    place: "秦淮河", time: "夜间",
+    elems: "河面倒影、画舫、酒旗、灯烛",
+    cam: "低角度横移，缓慢推进",
+    en: "Qinhuai River at night, lantern-lit painted boats, wine banner, candlelight on the water",
+    fact: "年代与地理限秦淮河，器物限酒旗、画舫、灯烛一类。",
+    narr: "视角固定为旁观者，不替人物解释内心。",
+    sample: "他下船进了河边小店，「老板娘」笑着迎他，问他要不要「来一杯」，还说这酒「性价比很高」。",
+    good: {
+      "唐": "客下舟，入河畔酒舍。「主人」笑迎，问客欲「一盏」否，且言此酒「价当」。",
+      "宋": "客登岸，入酒肆。「主人」令「茶酒博士」来迎，问客用「酒馔」否。",
+      "明": "客夜至河房，呼「店主人」上酒，「店小二」应之，客曰「还了酒钱」便可。",
+      "清": "客坐河房，「掌柜」殷勤相迎，「伙计」奉酒而至，客称此地「可留一记」。"
+    },
+    slots: {
+      "唐": [
+        { to: "主人", layer: "语域层", src: "《史记·司马相如列传》「令文君当垆」", verified: true },
+        { to: "一盏", layer: "语域层", src: "", verified: false },
+        { to: "价当", layer: "语域层", src: "语域层规则", verified: true }
+      ],
+      "宋": [
+        { to: "主人", layer: "语域层", src: "《史记》（沿用）", verified: true },
+        { to: "茶酒博士", layer: "语域层", src: "", verified: false },
+        { to: "酒馔", layer: "语域层", src: "语域层规则", verified: true }
+      ],
+      "明": [
+        { to: "店主人", layer: "语域层", src: "明清白话小说", verified: true },
+        { to: "店小二", layer: "语域层", src: "《水浒传》", verified: true },
+        { to: "还了酒钱", layer: "语域层", src: "", verified: false }
+      ],
+      "清": [
+        { to: "掌柜", layer: "语域层", src: "明清白话小说", verified: true },
+        { to: "伙计", layer: "语域层", src: "明清白话小说", verified: true },
+        { to: "可留一记", layer: "语域层", src: "语域层规则", verified: true }
+      ]
+    }
+  },
+  "江南茶肆": {
+    place: "江南临河茶肆", time: "午后",
+    elems: "茶炉、茶盏、临河窗榻、柳枝",
+    cam: "平稳横移，近景过肩",
+    en: "a riverside teahouse in Jiangnan, afternoon light, tea stove, tea bowls, latticed window",
+    fact: "年代与地理限江南临河茶肆，器物限风炉、茶盏、条案一类。",
+    narr: "视角固定为旁观者，只叙述动作与器物。",
+    sample: "他推开茶肆的门，「老板」招呼他坐下，问他要不要「来一杯」，说这茶「性价比很高」。",
+    good: {
+      "唐": "客推门入茶肆，「主人」延之坐，奉茶「一盏」，客称茶「价当」。",
+      "宋": "客入茶铺，问「茶酒博士」有「酒馔」否，又「当面细问」之。",
+      "明": "客坐茶肆，「店主人」奉茶，「店小二」侍立，客言此处「可留片刻」。",
+      "清": "茶肆座上多客，「掌柜」呼「伙计」添茶，客遂「会了账」。"
+    },
+    slots: {
+      "唐": [
+        { to: "主人", layer: "语域层", src: "《史记·司马相如列传》「令文君当垆」", verified: true },
+        { to: "一盏", layer: "语域层", src: "", verified: false },
+        { to: "价当", layer: "语域层", src: "语域层规则", verified: true }
+      ],
+      "宋": [
+        { to: "茶酒博士", layer: "语域层", src: "", verified: false },
+        { to: "酒馔", layer: "语域层", src: "语域层规则", verified: true },
+        { to: "当面细问", layer: "语域层", src: "语域层规则", verified: true }
+      ],
+      "明": [
+        { to: "店主人", layer: "语域层", src: "明清白话小说", verified: true },
+        { to: "店小二", layer: "语域层", src: "《水浒传》", verified: true },
+        { to: "可留片刻", layer: "语域层", src: "语域层规则", verified: true }
+      ],
+      "清": [
+        { to: "掌柜", layer: "语域层", src: "明清白话小说", verified: true },
+        { to: "伙计", layer: "语域层", src: "明清白话小说", verified: true },
+        { to: "会了账", layer: "语域层", src: "", verified: false }
+      ]
+    }
+  },
+  "长江渡口": {
+    place: "长江渡口", time: "黄昏",
+    elems: "渡船、缆绳、江雾、岸边草棚",
+    cam: "远景起幅，缓慢拉近",
+    en: "a ferry crossing on the Yangtze River at dusk, ferry boat, mooring rope, river mist, thatched shed",
+    fact: "年代与地理限长江下游渡口，器物限渡船、缆绳、草棚一类。",
+    narr: "视角固定为旁观者，以环境收束。",
+    sample: "渡口边有个小摊，「老板娘」招呼他坐下，递上「来一杯」热茶，说「包你满意」。",
+    good: {
+      "唐": "渡头初暝，一舟横岸。「主人」煎茶「一盏」以待，客饮而「称善」。",
+      "宋": "渡口日斜，舟横待发。「主人」呼「茶酒博士」添酒，问客「更添一味」否。",
+      "明": "渡口风起，舟人解缆。客呼「店主人」上汤，「店小二」捧之而至，客遂「还了酒钱」。",
+      "清": "渡口人稀，舟次未发。客呼「掌柜」添茶，「伙计」奉之，客称「此行可记」。"
+    },
+    slots: {
+      "唐": [
+        { to: "主人", layer: "语域层", src: "《史记·司马相如列传》「令文君当垆」", verified: true },
+        { to: "一盏", layer: "语域层", src: "", verified: false },
+        { to: "称善", layer: "语域层", src: "语域层规则", verified: true }
+      ],
+      "宋": [
+        { to: "主人", layer: "语域层", src: "《史记》（沿用）", verified: true },
+        { to: "茶酒博士", layer: "语域层", src: "", verified: false },
+        { to: "更添一味", layer: "语域层", src: "语域层规则", verified: true }
+      ],
+      "明": [
+        { to: "店主人", layer: "语域层", src: "明清白话小说", verified: true },
+        { to: "店小二", layer: "语域层", src: "《水浒传》", verified: true },
+        { to: "还了酒钱", layer: "语域层", src: "", verified: false }
+      ],
+      "清": [
+        { to: "掌柜", layer: "语域层", src: "明清白话小说", verified: true },
+        { to: "伙计", layer: "语域层", src: "明清白话小说", verified: true },
+        { to: "此行可记", layer: "语域层", src: "语域层规则", verified: true }
+      ]
+    }
+  }
+};
+
+const CTX = { scene: 0, dyn: 0 };
+const STEPS = Array.from(document.querySelectorAll("#pipeline .step"));
+const TABS = [
+  { tab: "tab-repl", panel: "panel-repl" },
+  { tab: "tab-prompt", panel: "panel-prompt" },
+  { tab: "tab-rule", panel: "panel-rule" }
+];
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+let running = false;
+let lastResult = null;
+
+function $(id) { return document.getElementById(id); }
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function marked(text) {
+  return Array.from(String(text || "").matchAll(/「(.+?)」/g)).map(function (m) { return m[1]; });
+}
+
+function renderMarked(text, flags) {
+  let i = 0;
+  return escapeHtml(text).replace(/「(.+?)」/g, function (_, inner) {
+    const ok = flags && flags[i];
+    i += 1;
+    return ok === false
+      ? '<mark class="needcheck">' + inner + "</mark>"
+      : "<mark>" + inner + "</mark>";
+  });
+}
+
+function highlightTerms(text, terms) {
+  let out = escapeHtml(text);
+  (terms || []).forEach(function (term) {
+    if (!term) return;
+    const safe = escapeHtml(term);
+    out = out.split(safe).join('<mark class="needcheck">' + safe + "</mark>");
+  });
+  return out;
+}
+
+function buildPromptCN(scene, dyn) {
+  const d = STYLE[dyn];
+  return d.cn + scene.place + "，" + scene.time + "。画面元素：" + scene.elems + "。" +
+    "人物服饰：" + d.costume + "。建筑与器物：" + d.arch + "。光线：" + d.light + "。" +
+    "镜头：" + scene.cam + "。画风：中国传统工笔与水墨质感，层次清晰，画面留白。\n" +
+    "负向：无现代器物、无现代文字标识、无电线、无玻璃幕墙、无现代服饰。";
+}
+
+function buildPromptEN(scene, dyn) {
+  const d = STYLE[dyn];
+  return d.en + ", " + scene.en + ". Historically accurate costume and architecture. " +
+    "Chinese gongbi and ink-wash painting style, clear layering, generous negative space. " +
+    "Camera: slow low-angle lateral track.\n" +
+    "Negative: modern objects, modern signage, electrical wires, glass curtain wall, modern clothing.";
+}
+
+function paint(result) {
+  const scene = SCENE[SCENES[CTX.scene]];
+  const dyn = DYNASTIES[CTX.dyn];
+  const slots = (result && result.slots) || [];
+  const flags = slots.map(function (s) { return s.verified !== false; });
+  const pending = flags.filter(function (f) { return f === false; }).length;
+
+  $("detected").innerHTML = slots.map(function (s, i) {
+    return '<div class="slot-line"><span class="slot-no">' + (i + 1) + '</span><span class="slot-left">' +
+      escapeHtml(s.from || "") + "</span></div>";
+  }).join("");
+
+  $("bad-m1").textContent = slots.length + " 处";
+  $("bad-m2").textContent = slots.length + " 处";
+
+  $("good-out").innerHTML = renderMarked(result.constrained, flags);
+  $("slots-right").innerHTML = slots.map(function (s, i) {
+    const cls = flags[i] === false ? "slot-right needcheck" : "slot-right";
+    return '<div class="slot-line"><span class="slot-no">' + (i + 1) + '</span><span class="' + cls + '">' +
+      escapeHtml(s.to || "") + "</span></div>";
+  }).join("");
+
+  $("good-m1").textContent = (slots.length - pending) + " 处";
+  $("good-m2").textContent = pending + " 处";
+  $("trace").textContent = slots.length === 0 ? "—" : (pending ? "部分待考究" : "是");
+
+  $("evidence").innerHTML =
+    "<span>史实层 · " + dyn + " · " + SCENES[CTX.scene] + "</span>" +
+    "<span>语域层 · 书面叙述体</span>" +
+    "<span>叙事层 · 旁观视角</span>" +
+    "<span>槽位 " + slots.length + " 处 · 已核 " + (slots.length - pending) + " 处</span>";
+
+  $("repl-list").innerHTML = slots.map(function (s, i) {
+    const ok = flags[i];
+    const srcLine = ok
+      ? '<span class="ok">依据：' + escapeHtml(s.src || "语域层规则") + "</span>"
+      : '<span class="wait">依据待考究：尚未入库，暂不入正式流程</span>';
+    const badge = ok ? "" : '<span class="tag-warn">待考究</span>';
+    return '<div class="repl-row">' +
+      '<div class="repl-no">' + (i + 1) + "</div>" +
+      '<div class="repl-from">「' + escapeHtml(s.from || "") + "」</div>" +
+      '<div class="repl-arrow">→</div>' +
+      '<div><div class="' + (ok ? "repl-to" : "repl-to needcheck") + '">「' + escapeHtml(s.to || "") + "」" + badge + "</div>" +
+      '<div class="src">' + srcLine + "</div></div></div>";
+  }).join("");
+
+  $("prompt-cn").textContent = result.promptCN || buildPromptCN(scene, dyn);
+  $("prompt-en").textContent = result.promptEN || buildPromptEN(scene, dyn);
+  $("rule-fact").textContent = result.fact || scene.fact;
+  $("rule-reg").textContent = result.reg || STYLE[dyn].hint;
+  $("rule-narr").textContent = result.narr || scene.narr;
+}
+
+function sampleText() {
+  return SCENE[SCENES[CTX.scene]].sample;
+}
+
+function builtinResult() {
+  const scene = SCENE[SCENES[CTX.scene]];
+  const dyn = DYNASTIES[CTX.dyn];
+  const text = $("src-text").value.trim() || scene.sample;
+  const rawSlots = scene.slots[dyn];
+  const terms = marked(scene.sample);
+  const isSample = text === scene.sample;
+  return {
+    constrained: scene.good[dyn],
+    slots: rawSlots.map(function (s, i) {
+      return { from: isSample ? terms[i] : "", to: s.to, layer: s.layer, src: s.src, verified: s.verified };
+    }),
+    promptCN: buildPromptCN(scene, dyn),
+    promptEN: buildPromptEN(scene, dyn),
+    fact: scene.fact,
+    reg: STYLE[dyn].hint,
+    narr: scene.narr,
+    demo: true
+  };
+}
+
+function readApi() {
+  return {
+    provider: $("api-provider").value,
+    base: $("api-base").value.trim().replace(/\/+$/, ""),
+    model: $("api-model").value.trim(),
+    key: $("api-key").value.trim()
+  };
+}
+
+function storeApi() {
+  try {
+    localStorage.setItem("zhb_api", JSON.stringify({
+      provider: $("api-provider").value,
+      base: $("api-base").value,
+      model: $("api-model").value,
+      key: $("api-key").value
+    }));
+  } catch (e) { /* 本地存储不可用时忽略 */ }
+}
+
+function loadApi() {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem("zhb_api") || "null"); } catch (e) { saved = null; }
+  const provider = (saved && saved.provider) || "deepseek";
+  $("api-provider").value = provider;
+  $("api-base").value = (saved && saved.base) || PROVIDERS[provider].base;
+  $("api-model").value = (saved && saved.model) || PROVIDERS[provider].model;
+  $("api-key").value = (saved && saved.key) || "";
+}
+
+function syncProvider() {
+  const p = $("api-provider").value;
+  if ($("api-base").value.trim() === "" || Object.keys(PROVIDERS).some(function (k) {
+    return PROVIDERS[k].base && PROVIDERS[k].base === $("api-base").value.trim();
+  })) {
+    $("api-base").value = PROVIDERS[p].base;
+    $("api-model").value = PROVIDERS[p].model;
+  }
+}
+
+function systemPrompt() {
+  const scene = SCENE[SCENES[CTX.scene]];
+  const dyn = DYNASTIES[CTX.dyn];
+  const d = STYLE[dyn];
+  return [
+    "你是《秦淮泊》项目的文化约束生成器，任务是把我给你的现代描写，改写成符合指定朝代与场景的文本，并输出图像生成提示词。",
+    "",
+    "本次参数",
+    "朝代：" + d.cn,
+    "场景：" + scene.place + "，时间：" + scene.time,
+    "",
+    "三层约束",
+    "1. 史实层（必须可查证）：" + scene.fact,
+    "2. 语域层：" + d.hint + " 禁用现代口语、商业用语与网络用语。",
+    "3. 叙事层：" + scene.narr,
+    "",
+    "输出要求",
+    "- constrained：改写后的文本。凡是被替换掉的现代词，用「」包裹替换后的词，共 3 处。",
+    "- slots：与 constrained 中三处「」一一对应的数组，每项含 from（原现代词）、to（替换词）、layer（史实层/语域层/叙事层）、src（文献出处）、verified（是否有文献依据）。",
+    "- 只有当你能给出可查证的文献出处时才把 verified 设为 true；不确定的、查不到的，一律 verified 设为 false 且 src 置空，禁止编造出处。",
+    "- promptCN：中文图像生成提示词，包含朝代、场景、服装、器物、光线、镜头、画风与负向提示。",
+    "- promptEN：上面对应的英文提示词。",
+    "- fact / reg / narr：三层各自在本场景中的执行说明，各一句。",
+    "",
+    "只输出一个 JSON 对象，不要输出解释或代码块标记。"
+  ].join("\n");
+}
+
+function parseJson(text) {
+  const cleaned = String(text || "").replace(/```json/gi, "").replace(/```/g, "").trim();
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+  if (start < 0 || end <= start) throw new Error("返回内容不是 JSON");
+  return JSON.parse(cleaned.slice(start, end + 1));
+}
+
+async function callApi(api) {
+  const body = {
+    model: api.model,
+    messages: [
+      { role: "system", content: systemPrompt() },
+      { role: "user", content: $("src-text").value.trim() }
+    ],
+    temperature: 0.7,
+    stream: false
+  };
+  const resp = await fetch(api.base + "/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + api.key },
+    body: JSON.stringify(body)
+  });
+  if (!resp.ok) {
+    const detail = await resp.text().catch(function () { return ""; });
+    throw new Error("接口返回 " + resp.status + " " + detail.slice(0, 160));
+  }
+  const data = await resp.json();
+  const content = data && data.choices && data.choices[0] &&
+    data.choices[0].message && data.choices[0].message.content;
+  const parsed = parseJson(content);
+  parsed.slots = (parsed.slots || []).map(function (s) {
+    return {
+      from: s.from || "",
+      to: s.to || "",
+      layer: s.layer || "语域层",
+      src: s.verified === false ? "" : (s.src || ""),
+      verified: s.verified !== false && !!s.src
+    };
+  });
+  return parsed;
+}
+
+function setStatus(text, isError) {
+  const el = $("status");
+  el.textContent = text;
+  el.className = isError ? "status err" : "status";
+}
+
+function lightSteps(onCount) {
+  STEPS.forEach(function (s, i) { s.classList.toggle("on", i < onCount); });
+}
+
+async function run() {
+  if (running) return;
+  const api = readApi();
+  const useApi = !!(api.key && api.base && api.model);
+
+  if (!useApi) {
+    lastResult = builtinResult();
+    paint(lastResult);
+    lightSteps(STEPS.length);
+    const isSample = ($("src-text").value.trim() || sampleText()) === sampleText();
+    setStatus(
+      isSample
+        ? "未配置接口：正在使用内置示例。填上 API Key 后，左侧任意输入都会实时生成。"
+        : "未配置接口：内置示例只覆盖示例文本，你输入的这段还没有被处理。在下面填上 API Key，就会出现针对它的实时生成结果。",
+      false
+    );
+    return;
+  }
+
+  running = true;
+  $("run").disabled = true;
+  lightSteps(1);
+  setStatus("正在调用 " + api.model + " …", false);
+  const timer = window.setInterval(function () {
+    const on = STEPS.filter(function (s) { return s.classList.contains("on"); }).length;
+    if (on < STEPS.length - 1) lightSteps(on + 1);
+  }, 700);
+
+  try {
+    const result = await callApi(api);
+    lastResult = result;
+    paint(result);
+    lightSteps(STEPS.length);
+    const pending = (result.slots || []).filter(function (s) { return !s.verified; }).length;
+    setStatus("生成完成：" + (result.slots || []).length + " 处替换，其中待考究 " + pending + " 处。", false);
+  } catch (err) {
+    lastResult = builtinResult();
+    paint(lastResult);
+    lightSteps(STEPS.length);
+    setStatus("调用失败，已回退到内置示例：" + (err && err.message ? err.message : err), true);
+  } finally {
+    window.clearInterval(timer);
+    running = false;
+    $("run").disabled = false;
+  }
+}
+
+function selectTab(index) {
+  TABS.forEach(function (t, i) {
+    $(t.tab).setAttribute("aria-selected", String(i === index));
+    $(t.panel).hidden = i !== index;
+  });
+}
+
+function copyFrom(id, button) {
+  const text = $(id).textContent;
+  const done = function () {
+    const old = button.textContent;
+    button.textContent = "已复制";
+    window.setTimeout(function () { button.textContent = old; }, 1200);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done, done);
+  } else {
+    done();
+  }
+}
+
+function bindGroup(prefix, count, apply) {
+  for (let i = 0; i < count; i++) {
+    $(prefix + "-" + i).addEventListener("click", function () {
+      apply(i);
+      for (let j = 0; j < count; j++) {
+        $(prefix + "-" + j).setAttribute("aria-pressed", String(j === i));
+      }
+      $("src-text").value = sampleText();
+      lightSteps(0);
+      setStatus("");
+      paint(builtinResult());
+    });
+  }
+}
+
+bindGroup("scene", SCENES.length, function (i) { CTX.scene = i; });
+bindGroup("dyn", DYNASTIES.length, function (i) { CTX.dyn = i; });
+
+TABS.forEach(function (t, i) {
+  $(t.tab).addEventListener("click", function () { selectTab(i); });
+});
+
+$("run").addEventListener("click", run);
+$("reset-src").addEventListener("click", function () {
+  $("src-text").value = sampleText();
+  paint(builtinResult());
+  setStatus("");
+});
+$("copy-cn").addEventListener("click", function () { copyFrom("prompt-cn", this); });
+$("copy-en").addEventListener("click", function () { copyFrom("prompt-en", this); });
+$("api-provider").addEventListener("change", function () {
+  $("api-base").value = PROVIDERS[this.value].base;
+  $("api-model").value = PROVIDERS[this.value].model;
+});
+$("save-api").addEventListener("click", function () {
+  storeApi();
+  const api = readApi();
+  setStatus(api.key ? "接口设置已保存在本机浏览器。" : "未填写 API Key，仍使用内置示例。", false);
+});
+
+loadApi();
+$("src-text").value = sampleText();
+selectTab(0);
+lightSteps(0);
+paint(builtinResult());
+</script>
+</body>
+</html>
