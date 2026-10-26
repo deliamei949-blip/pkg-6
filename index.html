@@ -269,6 +269,85 @@
     text-decoration:none;word-break:break-all;vertical-align:middle}
   #folio5 .douyin-url:hover{color:var(--accent-strong)}
 
+  /* ---------- Orbit · AI 思考搭子 ---------- */
+  #folio5 .orbit-fab{position:fixed;right:clamp(16px,3vw,28px);bottom:clamp(16px,3vh,28px);z-index:150;
+    width:5rem;height:5rem;border-radius:50%;border:none;cursor:pointer;padding:0;
+    background:#F5EBDD;display:grid;place-items:center;
+    box-shadow:0 6px 18px rgba(23,28,53,.22);
+    transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s ease}
+  #folio5 .orbit-fab:hover{transform:translateY(-4px);box-shadow:0 10px 26px rgba(116,125,168,.4)}
+  #folio5 .orbit-fab img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+  #folio5 .orbit-tip{position:fixed;right:clamp(16px,3vw,28px);bottom:calc(clamp(16px,3vh,28px) + 5.7rem);
+    z-index:150;font-family:var(--mono);font-size:.72rem;color:#171C35;background:#F5EBDD;
+    border:1px solid rgba(23,28,53,.16);padding:.45rem .75rem;border-radius:999px;
+    opacity:0;pointer-events:none;transform:translateY(4px);transition:opacity .25s ease,transform .25s ease;
+    box-shadow:0 6px 16px rgba(23,28,53,.14);white-space:nowrap}
+  #folio5 .orbit-tip.show{opacity:1;transform:translateY(0)}
+  #folio5 .orbit-panel{position:fixed;right:clamp(16px,3vw,28px);bottom:calc(clamp(16px,3vh,28px) + 5.7rem);
+    z-index:150;width:min(380px,calc(100vw - 32px));height:min(560px,66vh);
+    background:var(--paper);border:1px solid var(--line);border-radius:18px;
+    display:flex;flex-direction:column;overflow:hidden;opacity:0;pointer-events:none;
+    transform:translateY(16px);transition:opacity .28s ease,transform .28s ease;
+    box-shadow:0 24px 60px rgba(23,28,53,.25)}
+  #folio5 .orbit-panel.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+  #folio5 .orbit-head{display:flex;align-items:center;gap:.7rem;padding:.85rem 1rem;
+    border-bottom:1px solid var(--line);background:var(--paper)}
+  #folio5 .orbit-head img{width:2.4rem;height:2.4rem;flex:0 0 auto;border-radius:50%;object-fit:cover}
+  #folio5 .orbit-head .orbit-head-txt{flex:1;min-width:0}
+  #folio5 .orbit-head .orbit-name{font-family:var(--serif);font-weight:600;font-size:1.02rem;color:var(--ink);line-height:1.2}
+  #folio5 .orbit-head .orbit-sub{font-family:var(--mono);font-size:.64rem;letter-spacing:.05em;color:var(--muted);margin-top:.15rem}
+  #folio5 .orbit-close{border:none;background:none;cursor:pointer;font-size:1.1rem;color:var(--muted);padding:.3rem;line-height:1}
+  #folio5 .orbit-close:hover{color:var(--ink)}
+  #folio5 .orbit-body{flex:1;overflow-y:auto;padding:1rem 1rem .5rem;display:flex;flex-direction:column;gap:.7rem;scrollbar-width:thin}
+  #folio5 .orbit-msg{max-width:86%;padding:.65rem .85rem;border-radius:14px;font-size:.9rem;line-height:1.6;word-break:break-word}
+  #folio5 .orbit-msg--ai{align-self:flex-start;background:var(--paper-2);color:var(--ink-2);border:1px solid var(--line)}
+  #folio5 .orbit-msg--user{align-self:flex-end;background:var(--accent);color:#fff}
+  #folio5 .orbit-msg p{margin:.25rem 0}
+  #folio5 .orbit-msg p:first-child{margin-top:0}
+  #folio5 .orbit-msg p:last-child{margin-bottom:0}
+  #folio5 .orbit-msg h1,#folio5 .orbit-msg h2,#folio5 .orbit-msg h3{font-size:1rem;font-weight:700;margin:.5rem 0 .25rem;color:var(--ink)}
+  #folio5 .orbit-msg ul,#folio5 .orbit-msg ol{margin:.25rem 0;padding-left:1.2em}
+  #folio5 .orbit-msg li{margin:.15rem 0}
+  #folio5 .orbit-msg strong{color:var(--ink);font-weight:700}
+  #folio5 .orbit-msg em{font-style:italic}
+  #folio5 .orbit-msg code{font-family:var(--mono);font-size:.82em;background:var(--paper-2);padding:.05em .35em;border-radius:4px}
+  #folio5 .orbit-msg a{color:var(--accent-strong);text-decoration:underline}
+  #folio5 .orbit-msg blockquote{margin:.3rem 0;padding-left:.7em;border-left:2px solid var(--accent);color:var(--muted)}
+  #folio5 .orbit-jump{display:inline-block;margin-top:.65rem;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));
+    background:var(--paper);color:var(--accent-strong);font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;
+    padding:.42rem .78rem;border-radius:999px;cursor:pointer;
+    transition:background .2s ease,color .2s ease,border-color .2s ease}
+  #folio5 .orbit-jump:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+  #folio5 .orbit-suggest{display:flex;flex-wrap:wrap;gap:.45rem;padding:.3rem 1rem .6rem}
+  #folio5 .orbit-suggest button{border:1px solid var(--line);background:var(--paper);color:var(--ink-2);
+    font-family:var(--sans);font-size:.78rem;padding:.42rem .7rem;border-radius:999px;cursor:pointer;
+    transition:border-color .2s ease,color .2s ease,background .2s ease}
+  #folio5 .orbit-suggest button:hover{border-color:var(--accent);color:var(--accent-strong);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+  #folio5 .orbit-foot{display:flex;gap:.5rem;padding:.7rem;border-top:1px solid var(--line);align-items:flex-end}
+  #folio5 .orbit-foot textarea{flex:1;border:1px solid var(--line);border-radius:10px;padding:.6rem .7rem;
+    font-size:.9rem;background:var(--paper);color:var(--ink);outline:none;font-family:var(--sans);
+    resize:none;max-height:96px;line-height:1.4;min-height:2.4rem}
+  #folio5 .orbit-foot textarea:focus{border-color:var(--accent)}
+  #folio5 .orbit-send{border:none;border-radius:10px;padding:.6rem .9rem;cursor:pointer;
+    background:var(--accent);color:#fff;font-family:var(--mono);font-size:.8rem;flex:0 0 auto}
+  #folio5 .orbit-send:hover{background:var(--accent-strong)}
+  #folio5 .orbit-clear{border:none;background:none;cursor:pointer;font-family:var(--mono);font-size:.68rem;
+    color:var(--muted);padding:.2rem .4rem;align-self:center}
+  #folio5 .orbit-clear:hover{color:var(--ink)}
+  #folio5 .orbit-dot{display:inline-flex;gap:4px;align-items:center;padding:.2rem 0}
+  #folio5 .orbit-dot span{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:orbitBlink 1.2s ease-in-out infinite}
+  #folio5 .orbit-dot span:nth-child(2){animation-delay:.2s}
+  #folio5 .orbit-dot span:nth-child(3){animation-delay:.4s}
+  @keyframes orbitBlink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+  @media (max-width:640px){
+    #folio5 .orbit-panel{left:0;right:0;bottom:0;width:100%;height:100vh;max-height:none;border-radius:0;border:none}
+    #folio5 .orbit-tip{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    #folio5 .orbit-fab{transition:none}
+    #folio5 .orbit-dot span{animation:none}
+  }
+
   /* ---------- 项目卡片翻面 ---------- */
   #folio5 .hcard.flip{padding:0;background:transparent;border:none;perspective:1000px;overflow:visible}
   #folio5 .hcard.flip:hover{transform:none;box-shadow:none;border-color:transparent}
@@ -438,6 +517,19 @@
   #folio5 .wk-body{margin-top:1.2rem;padding-top:1.1rem;border-top:1px solid var(--line);
     color:var(--ink-2);font-size:.95rem}
   #folio5 .wk-body p{margin:0 0 .8rem}
+  #folio5 .wk-preview{display:inline-flex;align-items:center;gap:.4rem;margin-top:.9rem;
+    font-family:var(--mono);font-size:.78rem;letter-spacing:.05em;color:var(--accent-strong);
+    border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line));
+    padding:.5rem .85rem;text-decoration:none;
+    transition:background .2s ease,color .2s ease,border-color .2s ease}
+  #folio5 .wk-preview:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+  #folio5 .wk-qr{display:flex;flex-direction:column;align-items:center;gap:.5rem;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)}
+  #folio5 .wk-qr img{width:140px;height:140px;object-fit:contain;border:1px solid var(--line);background:#fff}
+  #folio5 .wk-qr p{margin:0;font-family:var(--mono);font-size:.7rem;color:var(--muted);letter-spacing:.05em}
+  #folio5 .wk-orbit-hint{font-family:var(--mono);font-size:.7rem;color:var(--accent-strong);letter-spacing:.04em;
+    margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--line)}
+  #folio5 .gz-orbit-hint{font-family:var(--mono);font-size:.7rem;color:var(--accent-strong);letter-spacing:.04em;
+    margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--line)}
 
   /* ---------- 联系 ---------- */
   #folio5 .contact-block{border:1px solid var(--line);padding:clamp(1.4rem,3.5vw,2.4rem)}
@@ -518,7 +610,7 @@
               <div class="hero-meta">
                 <span><b>状态</b> <span class="blink">●</span> 开放机会 · 欢迎联系</span>
                 <span><b>学校</b> Monash University</span>
-                <span><b>邮箱</b> 3328281585@qq.com</span>
+                <span><b>邮箱</b> jmei0016@student.monash.edu</span>
               </div>
             </div>
             <div class="hero-illus">
@@ -592,12 +684,13 @@
             <div class="tl-body">
               <h3>Monash University</h3>
               <p>商学学士 · 战略营销（Bachelor of Business and Commerce · Strategic Marketing）</p>
-              <p>整体成绩排名前 30%</p>
+              <p>均分 70/100 · 专业前 30%</p>
               <div class="course-chips">
                 <span>市场营销研究方法</span>
                 <span>数据分析与建模基础（90 · HD）</span>
                 <span>媒介与全球流动</span>
               </div>
+              <p>正在申请从商科转向数字媒体与传播——一个「做中学」的人：习惯直接上手、遇到问题再查，通过比赛和实习发现自己更想做「人文 + 内容 + 传播」。</p>
             </div>
           </div>
           <svg class="mini-illus" viewBox="0 0 96 96" aria-hidden="true" style="right:0;bottom:-0.5rem;width:96px">
@@ -623,8 +716,9 @@
               <div class="tl-time">2026.03 — 2026.06</div>
               <h3>网易 LOFTER · 线上内容运营实习生<small>工作 / 实习</small></h3>
               <ul>
-                <li>垂直账号运营：单条最高近 5 万浏览、近 7000 点赞，累计 600+ 粉丝</li>
-                <li>AI 语音生成 + 视觉素材制作小说剧情类内容，按数据反馈迭代选题</li>
+                <li>从建号到剪辑全流程独立运营：定位、选题策划、制作、剪辑、发布、看数据迭代，一个人完成</li>
+                <li>以 AI 语音生成 + 视觉素材为主、偶尔手绘，制作小说剧情类内容</li>
+                <li>单条最高近 5 万浏览、近 7000 点赞，累计 600+ 粉丝</li>
               </ul>
               <a class="douyin-link" href="https://v.douyin.com/-73yi21_WCA/" target="_blank" rel="noopener">抖音主页 ↗</a>
               <a class="douyin-url" href="https://v.douyin.com/-73yi21_WCA/" target="_blank" rel="noopener">v.douyin.com/-73yi21_WCA/</a>
@@ -755,8 +849,8 @@
               <span class="pc-bar"><span class="pc-name">《秦淮泊》文化约束生成器</span><span class="pc-arrow">↗</span></span>
             </a>
             <a href="#" class="hcard wk-card project-card" data-work="staratlas" style="text-decoration:none;color:inherit">
-              <img src="assets/project-staratlas.png" alt="Star Atlas 星图知识工具">
-              <span class="pc-bar"><span class="pc-name">Star Atlas 星图知识工具</span><span class="pc-arrow">↗</span></span>
+              <img src="assets/project-staratlas.png" alt="Star Atlas 星图知识工具 App">
+              <span class="pc-bar"><span class="pc-name">Star Atlas 星图知识工具 App</span><span class="pc-arrow">↗</span></span>
             </a>
           </div>
           <svg class="mini-illus" viewBox="0 0 110 90" aria-hidden="true" style="right:0;bottom:-0.5rem;width:110px">
@@ -777,7 +871,7 @@
           <div class="sec-head" data-ghost="05"><span class="sec-no">05 — Contact</span>
             <h2 class="sec-title">联系我</h2></div>
           <div class="contact-block">
-            <p class="contact-mail"><a href="mailto:3328281585@qq.com">3328281585@qq.com</a></p>
+            <p class="contact-mail"><a href="mailto:jmei0016@student.monash.edu">jmei0016@student.monash.edu</a></p>
             <p class="contact-sub">电话 132 2112 2681 · 微信 deliamei949</p>
           </div>
           <div class="panel-foot">
@@ -842,8 +936,32 @@
   <img id="lbImg" alt="">
 </div>
 
+<!-- Orbit · AI 思考搭子 -->
+<button class="orbit-fab" id="orbitFab" aria-label="打开 Orbit，佳凝的 AI 思考搭子">
+  <img src="assets/icon.png" alt="">
+</button>
+<span class="orbit-tip" id="orbitTip" aria-hidden="true">想了解佳凝？来问问我</span>
+<div class="orbit-panel" id="orbitPanel" role="dialog" aria-label="Orbit 聊天窗口">
+  <div class="orbit-head">
+    <img src="assets/icon.png" alt="">
+    <div class="orbit-head-txt">
+      <div class="orbit-name">Ask Orbit</div>
+      <div class="orbit-sub">佳凝的 AI 思考搭子</div>
+    </div>
+    <button class="orbit-close" id="orbitClose" aria-label="关闭聊天窗口">✕</button>
+  </div>
+  <div class="orbit-body" id="orbitBody"></div>
+  <div class="orbit-suggest" id="orbitSuggest"></div>
+  <div class="orbit-foot">
+    <textarea id="orbitInput" rows="1" placeholder="问我点什么…"></textarea>
+    <button class="orbit-clear" id="orbitClear" type="button">重新开始</button>
+    <button class="orbit-send" id="orbitSend" type="button">发送</button>
+  </div>
 </div>
 
+</div>
+
+<script src="orbit-profile.js"></script>
 <script>
 (function(){
   var root=document.getElementById("folio5");
@@ -1013,6 +1131,10 @@
     gzSub.textContent=nd.querySelector(".gz-sub").textContent;
     var tpl=nd.querySelector(".gz-detail");
     gzBody.innerHTML=tpl?tpl.innerHTML:"";
+    var gh=document.createElement("p");
+    gh.className="gz-orbit-hint";
+    gh.textContent="想了解更多细节？点右下角的 Orbit 问我 ✦";
+    gzBody.appendChild(gh);
     gzCount.textContent=(i+1)+" / "+gzNodes.length;
     gzPrev.disabled=(i===0);
     gzNext.disabled=(i===gzNodes.length-1);
@@ -1041,7 +1163,7 @@
   var WORKS={
     staratlas:{
       tag:"WORKS — 产品 · 工具",
-      title:"Star Atlas 星图知识工具",
+      title:"Star Atlas 星图知识工具 App",
       tagline:"把刚学到的东西，点燃成一颗自己的星星。",
       meta:["3D 星图 · Electron + React","本地 SQLite 存储","三种形态演化"],
       steps:[{
@@ -1057,7 +1179,8 @@
       }],
       body:["这个工具把「学一个新东西该怎么处理」拆成四步：捕获 → 点燃 → 连接 → 漫游。随手记一句话，AI 帮它打磨成一张「背面五字段」卡片（原始信号、我的解码、类比、类比失效边界、认知陷阱），再自己去把不同概念连起来。",
         "知识在这里分三种形态单向演化：刚捕获的「星辰」→ AI 打磨填满五字段的「脉冲星」→ 和别的星连上关系的「星座」。概念之间的关系分四类：引力共振（同构）、轨道环绕（前提）、双星互斥（对比）、星云包裹（包含）。",
-        "纯自用工具，跑在本地，数据全部存 SQLite 不联网，AI 调用要自己配 API Key。"]
+        "纯自用工具，跑在本地，数据全部存 SQLite 不联网，AI 调用要自己配 API Key。"],
+      qr:{img:"assets/qr-staratlas.png",text:"扫码下载 Star Atlas App（macOS）"}
     },
     novel:{
       tag:"WORKS — 研究探索",
@@ -1075,7 +1198,8 @@
           caption:"单本小说逐句展开的「光谱图」，每个色块代表一句话命中了哪些叙事功能，能看出节奏是怎么一段段起伏的。"}
       ],
       body:["会做这个纯粹是好奇：AI 写小说和人写小说，读起来「感觉不一样」到底能不能量化出来？",
-        "目前还是 pilot 阶段的探索性结论，样本不大，之后想扩大语料再验证一遍。"]
+        "目前还是 pilot 阶段的探索性结论，样本不大，之后想扩大语料再验证一遍。"],
+      preview:{url:"https://narrative-visualizer-sams.vercel.app/",text:"在线预览叙事节奏分析 ↗"}
     },
     "qinhuaibo-gen":{
       tag:"WORKS — 研究探索",
@@ -1095,7 +1219,8 @@
       body:["把《秦淮泊》项目里已有的三层约束落成一个可运行的检索约束方案——史实层（必须可查证）、语域层（古籍语料的倾向性约束，不宣称唯一正确）、叙事层（主观部分只作生成参数、不参与校验）。",
         "在模型侧强制结构化输出：规定无法给出可查证出处时不得编造，一律标为未核验；未核验条目在界面标红、排除出正式流程，交回人工复核。",
         "最终输出逐处替换建议（原词 → 替换词 → 所属约束层 → 文献出处 → 是否可核验），并导出中英文的画面生成提示词。",
-        "它回答的是我一直关心的问题：AI 生成的历史内容怎样做到可核验，以及不可核验的部分怎样交回给人。"]
+        "它回答的是我一直关心的问题：AI 生成的历史内容怎样做到可核验，以及不可核验的部分怎样交回给人。"],
+      preview:{url:"https://deliamei949-blip.github.io/pkg-6/qinhuaibo-tool.html",text:"在线预览文化约束生成器 ↗"}
     }
   };
 
@@ -1178,6 +1303,23 @@
     wkCurrent.body.forEach(function(p){
       var el=document.createElement("p");el.textContent=p;wkBody.appendChild(el);
     });
+    if(wkCurrent.qr){
+      var qd=document.createElement("div");qd.className="wk-qr";
+      var qi=document.createElement("img");qi.src=wkCurrent.qr.img;qi.alt="下载二维码";
+      var qt=document.createElement("p");qt.textContent=wkCurrent.qr.text||"";
+      qd.appendChild(qi);qd.appendChild(qt);
+      wkBody.appendChild(qd);
+    }
+    if(wkCurrent.preview){
+      var pa=document.createElement("a");
+      pa.className="wk-preview";pa.href=wkCurrent.preview.url;pa.target="_blank";pa.rel="noopener";
+      pa.textContent=wkCurrent.preview.text||"在线预览 ↗";
+      wkBody.appendChild(pa);
+    }
+    var hint=document.createElement("p");
+    hint.className="wk-orbit-hint";
+    hint.textContent="想了解更多细节？点右下角的 Orbit 问我 ✦";
+    wkBody.appendChild(hint);
     wkOverlay.classList.add("open");
     wkOverlay.querySelector(".gz-modal-scroll").scrollTop=0;
     wkClose.focus();
@@ -1374,6 +1516,196 @@
     resize();spawn();
     if(reduced){draw(true);}else{loop();}
   }
+
+  /* ---------- Orbit · AI 思考搭子 ---------- */
+  var ORBIT_CONFIG={mode:"mock",apiEndpoint:"/api/orbit",model:"deepseek-chat",apiKey:""};
+  var ORBIT_PROFILE=window.ORBIT_PROFILE||{};
+  var ORBIT_QUESTIONS=window.ORBIT_QUESTIONS||{initial:{},more:{}};
+  var ORBIT_SYSTEM_PROMPT=window.ORBIT_SYSTEM_PROMPT||"你是 Orbit，佳凝作品集的 AI 助手。";
+  var ORBIT_LANG=(navigator.language||"zh").toLowerCase().indexOf("zh")===0?"zh":"en";
+  var ORBIT_PANELS={0:"关于我",1:"教育背景",2:"经历",3:"项目",4:"联系"};
+
+  var orbitFab=document.getElementById("orbitFab");
+  var orbitTip=document.getElementById("orbitTip");
+  var orbitPanel=document.getElementById("orbitPanel");
+  var orbitClose=document.getElementById("orbitClose");
+  var orbitBody=document.getElementById("orbitBody");
+  var orbitSuggest=document.getElementById("orbitSuggest");
+  var orbitInput=document.getElementById("orbitInput");
+  var orbitSend=document.getElementById("orbitSend");
+  var orbitClear=document.getElementById("orbitClear");
+  var orbitHistory=[];
+
+  function orbitEscape(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function orbitRenderMarkdown(src){
+    var s=orbitEscape(src);
+    s=s.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+    s=s.replace(/\*([^*]+)\*/g,"<em>$1</em>");
+    s=s.replace(/`([^`]+)`/g,"<code>$1</code>");
+    s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+    var lines=s.split("\n"),html="",listOpen=false,listType="";
+    for(var i=0;i<lines.length;i++){
+      var line=lines[i];
+      var h=line.match(/^(#{1,3})\s+(.*)/);
+      if(h){if(listOpen){html+=listType==="ul"?"</ul>":"</ol>";listOpen=false;}var lv=h[1].length;html+="<h"+lv+">"+h[2]+"</h"+lv+">";continue;}
+      var ul=line.match(/^\s*[-*]\s+(.*)/),ol=line.match(/^\s*\d+\.\s+(.*)/);
+      if(ul||ol){var t=ul?"ul":"ol";if(!listOpen){html+="<"+t+">";listOpen=true;listType=t;}else if(listType!==t){html+="</"+listType+"><"+t+">";listType=t;}html+="<li>"+(ul?ul[1]:ol[1])+"</li>";continue;}
+      if(listOpen){html+=listType==="ul"?"</ul>":"</ol>";listOpen=false;}
+      var q=line.match(/^\s*&gt;\s*(.*)/);
+      if(q){html+="<blockquote>"+q[1]+"</blockquote>";continue;}
+      if(line.trim()===""){continue;}
+      html+="<p>"+line+"</p>";
+    }
+    if(listOpen){html+=listType==="ul"?"</ul>":"</ol>";}
+    return html;
+  }
+
+  function orbitAdd(text,who,jump){
+    var d=document.createElement("div");
+    d.className="orbit-msg orbit-msg--"+(who||"ai");
+    d.innerHTML=orbitRenderMarkdown(text);
+    if(jump!==null&&jump!==undefined&&!isNaN(jump)&&ORBIT_PANELS[jump]){
+      var jb=document.createElement("button");
+      jb.type="button";
+      jb.className="orbit-jump";
+      jb.textContent="去「"+ORBIT_PANELS[jump]+"」看看 ↗";
+      jb.addEventListener("click",function(){goTo(jump);});
+      d.appendChild(jb);
+    }
+    orbitBody.appendChild(d);
+    orbitBody.scrollTop=orbitBody.scrollHeight;
+  }
+
+  function orbitWelcome(){
+    var init=ORBIT_QUESTIONS.initial||{};
+    var list=init[ORBIT_LANG]||init.zh||[];
+    var msg=ORBIT_LANG==="zh"
+      ?"嗨，好奇的人！✦\n\n我是 Orbit，佳凝的 AI 思考搭子。\n\n她想走的方向挺多——内容运营、产品 / 商业、研究，还有自己动手做的作品。选下面一个方向，或者直接告诉我你想了解什么。"
+      :"Hey, curious mind. ✦\n\nI'm Orbit, Jianing's little AI companion.\n\nShe explores a few directions — content, product & business, research, and things she's built herself. Pick a direction below, or just ask me directly.";
+    orbitAdd(msg,"ai");
+    orbitRenderSuggest(list);
+  }
+
+  function orbitRenderSuggest(list){
+    orbitSuggest.innerHTML="";
+    (list||[]).forEach(function(q){
+      var b=document.createElement("button");
+      b.type="button";b.textContent=q;
+      b.addEventListener("click",function(){orbitSubmit(q);});
+      orbitSuggest.appendChild(b);
+    });
+  }
+
+  function orbitShowLoading(){
+    var d=document.createElement("div");
+    d.className="orbit-msg orbit-msg--ai";
+    d.innerHTML='<span class="orbit-dot"><span></span><span></span><span></span></span>';
+    orbitBody.appendChild(d);
+    orbitBody.scrollTop=orbitBody.scrollHeight;
+  }
+  function orbitRemoveLoading(){
+    var dots=orbitBody.querySelectorAll(".orbit-dot");
+    for(var i=dots.length-1;i>=0;i--){var m=dots[i].closest(".orbit-msg");if(m)m.remove();}
+  }
+
+  function orbitSubmit(q){
+    if(!q||!String(q).trim())return;
+    var text=String(q).trim();
+    orbitAdd(text,"user");
+    orbitInput.value="";
+    orbitInput.style.height="auto";
+    orbitShowLoading();
+    orbitHistory.push({role:"user",content:text});
+    if(ORBIT_CONFIG.mode==="mock"){orbitReplyMock(text);}
+    else{orbitReplyApi(text);}
+  }
+
+  function orbitMockAnswer(q){
+    var s=q.toLowerCase(),p=ORBIT_PROFILE,ans=null,go=null,cat=null;
+    if(/学校|大学|专业|教育|学历|monash|毕业|成绩|商科|传播|媒体/.test(s)){ans=p.education&&p.education.summary;go=1;cat="education";}
+    else if(/实习|工作|运营|lofter|抖音|内容|视频|账号/.test(s)){ans=p.internships&&p.internships.summary;go=2;cat="internships";}
+    else if(/产品|商业|品牌|定位|商业模式|香氛|市场/.test(s)){ans=p.product&&p.product.summary;go=2;cat="competitions";}
+    else if(/比赛|竞赛|获奖|brandstorm|秦淮泊|以艺愈心|创业|bootcamp|ccsic|奖/.test(s)){ans=p.competitions&&p.competitions.summary;go=2;cat="competitions";}
+    else if(/项目|作品|star atlas|星图|小说|工具|文化约束|做了什么/.test(s)){ans=p.projects&&p.projects.summary;go=3;cat="projects";}
+    else if(/研究|兴趣|方向|文学|数字人文|ip|版权|叙事|读者/.test(s)){ans=p.research&&p.research.summary;cat="research";}
+    else if(/技能|会什么|能力|工具|技术|excel|sql|python|r语言|touchdesigner/.test(s)){ans=p.skills&&p.skills.summary;go=0;cat="skills";}
+    else if(/团队|带来|价值|适配|契合|合作|贡献/.test(s)){ans=p.career&&p.career.summary;cat="career";}
+    else if(/联系|邮箱|微信|电话|合作机会|怎么找|联系方式/.test(s)){ans=p.contact&&p.contact.summary;go=4;cat="contact";}
+    else if(/思考|什么人|介绍|认识|了解|佳凝|谁|怎么样/.test(s)){ans=p.intro&&p.intro.summary;go=0;cat="intro";}
+    else{ans=ORBIT_LANG==="zh"?"诶，这个我手头资料还不多，先不瞎说。你可以问问我：她的项目、比赛、实习，或者研究兴趣、技能，这些我比较熟。":"Hmm, I don't have much on that yet — I'd rather not make things up. Try asking about her projects, competitions, internships, research, or skills.";}
+    return {text:ans,go:go,cat:cat};
+  }
+
+  function orbitReplyMock(q){
+    var r=orbitMockAnswer(q);
+    setTimeout(function(){
+      orbitRemoveLoading();
+      orbitAdd(r.text||"","ai",r.go);
+      orbitFollowUp(r.cat);
+    },420);
+  }
+
+  function orbitReplyApi(q){
+    var msgs=[{role:"system",content:ORBIT_SYSTEM_PROMPT}].concat(orbitHistory.slice(-8));
+    var headers={"Content-Type":"application/json"};
+    if(ORBIT_CONFIG.apiKey){headers.Authorization="Bearer "+ORBIT_CONFIG.apiKey;}
+    fetch(ORBIT_CONFIG.apiEndpoint,{
+      method:"POST",
+      headers:headers,
+      body:JSON.stringify({model:ORBIT_CONFIG.model,messages:msgs,stream:false,temperature:.7,max_tokens:500})
+    }).then(function(r){return r.json();}).then(function(data){
+      orbitRemoveLoading();
+      var reply=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)
+        ||(ORBIT_LANG==="zh"?"抱歉，我这边没答上来，稍后再试。":"Sorry, I couldn't answer that right now.");
+      var m=reply.match(/\[GO:(\d)\]/),target=null;
+      if(m){target=parseInt(m[1],10);reply=reply.replace(/\[GO:\d\]/g,"").trim();}
+      orbitAdd(reply,"ai",target);
+      orbitHistory.push({role:"assistant",content:reply});
+    }).catch(function(){
+      orbitRemoveLoading();
+      orbitAdd(ORBIT_LANG==="zh"?"抱歉，请求失败了，可能是网络或 Key 的问题。":"Sorry, the request failed — maybe a network or key issue.","ai");
+    });
+  }
+
+  function orbitFollowUp(cat){
+    var more=ORBIT_QUESTIONS.more||{};
+    var list=cat&&more[cat]?more[cat]:null;
+    if(list&&list.length){orbitRenderSuggest(list);}
+  }
+
+  function orbitOpen(){
+    orbitPanel.classList.add("open");
+    if(!orbitBody.children.length){orbitWelcome();}
+    orbitInput.focus();
+  }
+  function orbitCloseFn(){orbitPanel.classList.remove("open");}
+  function orbitReset(){
+    orbitHistory=[];
+    orbitBody.innerHTML="";
+    orbitWelcome();
+  }
+
+  orbitFab.addEventListener("click",function(){orbitPanel.classList.contains("open")?orbitCloseFn():orbitOpen();});
+  orbitFab.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();orbitOpen();}});
+  orbitClose.addEventListener("click",orbitCloseFn);
+  orbitSend.addEventListener("click",function(){orbitSubmit(orbitInput.value);});
+  orbitClear.addEventListener("click",orbitReset);
+  orbitInput.addEventListener("keydown",function(e){
+    if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();orbitSubmit(orbitInput.value);}
+  });
+  orbitInput.addEventListener("input",function(){
+    orbitInput.style.height="auto";
+    orbitInput.style.height=Math.min(orbitInput.scrollHeight,96)+"px";
+  });
+
+  var tipShow=setTimeout(function(){orbitTip.classList.add("show");},1600);
+  var tipHide=setTimeout(function(){orbitTip.classList.remove("show");},6000);
+  orbitFab.addEventListener("mouseenter",function(){orbitTip.classList.add("show");});
+  orbitFab.addEventListener("mouseleave",function(){orbitTip.classList.remove("show");});
+
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape"&&orbitPanel.classList.contains("open")){orbitCloseFn();}
+  });
 })();
 </script>
 </body>
