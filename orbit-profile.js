@@ -65,8 +65,8 @@ window.ORBIT_PROFILE = {
 
 window.ORBIT_QUESTIONS = {
   initial: {
-    zh: ["她做过哪些内容 / 账号运营？", "她有哪些产品 / 商业项目？", "她在研究什么方向？", "她有哪些自己做出来的作品？"],
-    en: ["What content / account work has she done?", "What product / business projects has she worked on?", "What is she researching?", "What has she built on her own?"]
+    zh: ["她做过哪些内容运营？", "她有哪些vibe-coding项目？", "她在研究什么方向？", "她有哪些自己做出来的作品？"],
+    en: ["What content / account work has she done?", "What vibe-coding projects has she worked on?", "What is she researching?", "What has she built on her own?"]
   },
   more: {
     intro: ["她不同的兴趣之间有什么联系？", "她目前还在探索什么问题？"],
